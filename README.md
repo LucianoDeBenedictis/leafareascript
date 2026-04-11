@@ -67,6 +67,8 @@ Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser
 4. Run `run_leafarea.ps1` with Powershell. If not present, `leafarea.cfg` will be created by asking the ImageJ location. Choose threshold, trim, particle size and circularity (empty uses the defaults)
 5. Continue with steps 3 and 4 above
 
+Tested on Windows 11.
+
 ## Testing
 
 The script has been checked with a selection of test images:
