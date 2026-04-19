@@ -79,23 +79,23 @@ The instructions are otherwise the same as for the portable/Windows versions.
 The script has been checked with a selection of test images:
 
 - test1, a 100 mm × 100 mm square on a 300 dpi A4 sheet
-![](images/test1.png)
+<img src="images/test1.png" height="400">
 - test2, same as test1 but with a 60 px wide black border to simulate a misaligned paper sheet
-![](images/test2.png)
+<img src="images/test2.png" height="400">
 - test3, three separate 30 mm × 30 mm squares
-![](images/test3.png)
+<img src="images/test3.png" height="400">
 - aremonia, a binary image
-![](images/aremonia.bmp)
+<img src="images/aremonia.bmp" height="400">
 - echinops, a grayscale image with shadows caused by the leaf thickness
-![](images/echinops.bmp)
+<img src="images/echinops.bmp" height="400">
 - test images from the LeafArea package. For these, the following settings have been chosen to approximate the package defaults: threshold auto, trim 20, minimum size 28 (converted from cm), lower circularity 0, upper circularity 1, paper size 210 x 297 mm.
-![](images/A1-01.jpeg)
-![](images/A1-02.jpeg)
-![](images/A2.jpeg)
-![](images/A123-01.jpeg)
-![](images/A123-02.jpeg)
-![](images/A300-1.jpeg)
-![](images/A300-2.jpeg)
+<img src="images/A1-01.jpeg" height="400">
+<img src="images/A1-02.jpeg" height="400">
+<img src="images/A2.jpeg" height="400">
+<img src="images/A123-01.jpeg" height="400">
+<img src="images/A123-02.jpeg" height="400">
+<img src="images/A300-1.jpeg" height="400">
+<img src="images/A300-2.jpeg" height="400">
 
 The results on test images are very close to the expected value. For the two real-world bitmaps, the automatic threshold worked well and values are very close to those obtained by other software. For the package images, comparing the areas with those derived from the README example (summing the particles in each image), the error was at most 1.15%, probably due to a different approximation of the pixel area:
 |  image | package  |  script | %err  |
