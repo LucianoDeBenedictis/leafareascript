@@ -1,7 +1,7 @@
 # The Leaf Area Script
 ## Semi-automated Leaf Area measurement
 
-Measurement of leaf area from flatbed scans is probably the most common approach. While there are a few available software solutions, they tend to be decades old, unreliable, OS-specific, opaque, and lacking batch processing of multiple images. Honorable mention goes to [the LeafArea R package](https://cran.r-project.org/web/packages/LeafArea/index.html) for the idea of relying on [ImageJ](https://imagej.net/ij/index.html), an actively maintained open-source image processing software with macro support. I couldn't make this package work, it's not as actively maintained as ImageJ itself, and my approach is slightly different, but I have to acknowledge it was the inspiration for this solution. 
+Measurement of leaf area from flatbed scans is probably the most common approach. While there are a few available software solutions, they tend to be decades old, unreliable, OS-specific, opaque, and lacking batch processing of multiple images. Honorable mention goes to [the LeafArea R package](https://cran.r-project.org/web/packages/LeafArea/index.html) for the idea of relying on [ImageJ](https://imagej.net/), an actively maintained open-source image processing software with macro support. I couldn't make this package work, it's not as actively maintained as ImageJ itself, and my approach is slightly different, but I have to acknowledge it was the inspiration for this solution. 
 
 More complex image processing software than ImageJ exists, but not all of them are FOSS or support automation; ImageJ is more than sufficient for the simple task of measuring leaf area from scans (there is an example in their documentation).
 
