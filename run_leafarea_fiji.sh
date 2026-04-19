@@ -1,10 +1,10 @@
 #!/bin/bash
-# run_leafarea_portable.sh
-# Version for Linux/Mac where ImageJ is not on PATH.
+# run_leafarea_fiji.sh
+# Version for Linux/Mac using Fiji instead of ImageJ.
 # Run from the directory containing your images.
 
 SCRIPT_DIR="$(dirname "$0")"
-MACRO_PATH="$SCRIPT_DIR/leafarea.ijm"
+MACRO_PATH="$SCRIPT_DIR/leafarea_fiji.py"
 CONFIG_FILE="$SCRIPT_DIR/leafarea.cfg"
 
 # ── Find ImageJ ──────────────────────────────────────────────────────────────
@@ -13,20 +13,20 @@ IJ_DIR=""
 
 if [[ -f "$CONFIG_FILE" ]]; then
     IJ_DIR=$(cat "$CONFIG_FILE")
-    if [[ ! -f "$IJ_DIR/ij.jar" ]]; then
-        echo "Saved ImageJ path no longer valid: $IJ_DIR"
+    if [[ ! -f "$IJ_DIR/fiji" ]]; then
+        echo "Saved Fiji path no longer valid: $IJ_DIR"
         IJ_DIR=""
     fi
 fi
 
 if [[ -z "$IJ_DIR" ]]; then
-    echo "ImageJ not found. Please enter the full path to your ImageJ folder."
-    echo "(e.g. /home/user/ImageJ or /Applications/ImageJ)"
+    echo "Fiji not found. Please enter the full path to your Fiji folder."
+    echo "(e.g. /home/user/Fiji.app or /Applications/Fiji.app)"
     echo ""
     read -p "ImageJ folder path: " IJ_DIR
     IJ_DIR="${IJ_DIR%/}"  # strip trailing slash
-    if [[ ! -f "$IJ_DIR/ij.jar" ]]; then
-        echo "Error: ij.jar not found in $IJ_DIR"
+    if [[ ! -f "$IJ_DIR/fiji" ]]; then
+        echo "Error: fiji executable not found in $IJ_DIR"
         exit 1
     fi
     echo "$IJ_DIR" > "$CONFIG_FILE"
@@ -34,8 +34,7 @@ if [[ -z "$IJ_DIR" ]]; then
     echo ""
 fi
 
-JAVA_EXE="$IJ_DIR/jre/bin/java"
-IJ_JAR="$IJ_DIR/ij.jar"
+FIJI_EXE="$IJ_DIR/fiji"
 
 # ── Defaults ─────────────────────────────────────────────────────────────────
 DEF_THRESHOLD="auto"
@@ -86,14 +85,14 @@ if [[ "$threshold" =~ ^[0-9]+$ && ( "$threshold" -lt 0 || "$threshold" -gt 255 )
 fi
 
 # ── Run ImageJ ───────────────────────────────────────────────────────────────
-ARGS="threshold=${threshold},trimPx=${trimPx},lowSize=${lowSize},upperSize=${upperSize},lowCirc=${lowCirc},upCirc=${upCirc}"
+ARGS='threshold="'"${threshold}"'",trimPx="'"${trimPx}"'",lowSize="'"${lowSize}"'",upperSize="'"${upperSize}"'",lowCirc="'"${lowCirc}"'",upCirc="'"${upCirc}"'"'
 
 echo ""
-echo "Running ImageJ on: $(pwd)"
+echo "Running Fiji on: $(pwd)"
 echo "Arguments: $ARGS"
 echo ""
 
-"$JAVA_EXE" -jar -Xmx1024m "$IJ_JAR" -batch "$MACRO_PATH" "$ARGS"
+"$FIJI_EXE" --headless --run "$MACRO_PATH" "$ARGS"
 
 # ── Summarize per-particle CSVs and write summary ───────────────────────────
 echo ""
