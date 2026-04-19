@@ -1,39 +1,38 @@
-# run_leafarea.ps1
+# run_leafarea_fiji.ps1
 # Run from the directory containing your images:
 #   cd C:\path\to\images
-#   & "C:\path\to\scripts\run_leafarea.ps1"
+#   & "C:\path\to\scripts\run_leafarea_fiji.ps1"
 
-$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$MacroPath = Join-Path $ScriptDir "leafarea.ijm"
+$ScriptDir  = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ScriptPath = Join-Path $ScriptDir "leafarea_fiji.py"
 $ConfigFile = Join-Path $ScriptDir "leafarea.cfg"
 
-# ── Find ImageJ ──────────────────────────────────────────────────────────────
-$IjDir = ""
+# ── Find Fiji ─────────────────────────────────────────────────────────────────
+$FijiDir = ""
 
 if (Test-Path $ConfigFile) {
-    $IjDir = (Get-Content $ConfigFile -Raw).Trim()
-    if (-not (Test-Path (Join-Path $IjDir "ij.jar"))) {
-        Write-Host "Saved ImageJ path no longer valid: $IjDir"
-        $IjDir = ""
+    $FijiDir = (Get-Content $ConfigFile -Raw).Trim()
+    if (-not (Test-Path (Join-Path $FijiDir "fiji"))) {
+        Write-Host "Saved Fiji path no longer valid: $FijiDir"
+        $FijiDir = ""
     }
 }
 
-if (-not $IjDir) {
-    Write-Host "ImageJ not found. Please enter the full path to your ImageJ folder."
-    Write-Host "(e.g. C:\Users\me\ImageJ)"
+if (-not $FijiDir) {
+    Write-Host "Fiji not found. Please enter the full path to your Fiji folder."
+    Write-Host "(e.g. C:\Users\me\Fiji.app)"
     Write-Host ""
-    $IjDir = (Read-Host "ImageJ folder path").Trim().TrimEnd('\')
-    if (-not (Test-Path (Join-Path $IjDir "ij.jar"))) {
-        Write-Error "ij.jar not found in $IjDir"
+    $FijiDir = (Read-Host "Fiji folder path").Trim().TrimEnd('\')
+    if (-not (Test-Path (Join-Path $FijiDir "fiji"))) {
+        Write-Error "fiji executable not found in $FijiDir"
         exit 1
     }
-    $IjDir | Set-Content $ConfigFile
+    $FijiDir | Set-Content $ConfigFile
     Write-Host "Path saved to $ConfigFile"
     Write-Host ""
 }
 
-$JavaExe = Join-Path $IjDir "jre\bin\java.exe"
-$IjJar   = Join-Path $IjDir "ij.jar"
+$FijiExe = Join-Path $FijiDir "fiji"
 
 # ── Defaults ─────────────────────────────────────────────────────────────────
 $Defaults = @{
@@ -46,7 +45,7 @@ $Defaults = @{
 }
 
 # ── Prompts ───────────────────────────────────────────────────────────────────
-Write-Host "=== ImageJ Leaf Area Analyzer ==="
+Write-Host "=== Fiji Leaf Area Analyzer ==="
 Write-Host "(Press Enter to accept the default shown in brackets)"
 Write-Host ""
 
@@ -85,15 +84,16 @@ if (-not $dpi) {
     $PaperH = Read-Host "Paper height (mm)"
 }
 
-# ── Run ImageJ ────────────────────────────────────────────────────────────────
-$IjArgs = "threshold=$threshold,trimPx=$trimPx,lowSize=$lowSize,upperSize=$upperSize,lowCirc=$lowCirc,upCirc=$upCirc"
+# ── Run Fiji ──────────────────────────────────────────────────────────────────
+# --run with #@String parameters requires each value double-quoted
+$FijiArgs = "threshold=`"$threshold`",trimPx=`"$trimPx`",lowSize=`"$lowSize`",upperSize=`"$upperSize`",lowCirc=`"$lowCirc`",upCirc=`"$upCirc`""
 
 Write-Host ""
-Write-Host "Running ImageJ on: $(Get-Location)"
-Write-Host "Arguments: $IjArgs"
+Write-Host "Running Fiji on: $(Get-Location)"
+Write-Host "Arguments: $FijiArgs"
 Write-Host ""
 
-& $JavaExe -jar -Xmx1024m $IjJar -batch $MacroPath $IjArgs
+& $FijiExe --headless --run $ScriptPath $FijiArgs
 
 # ── Summarize per-particle CSVs and write summary ─────────────────────────────
 Write-Host ""
@@ -103,7 +103,6 @@ $ResultsDir   = Join-Path (Get-Location) "results"
 $ParticlesDir = Join-Path $ResultsDir "particles"
 $ImageDir     = (Get-Location).Path
 
-# Write Python code to a temp file and run it
 $TempPy = Join-Path $env:TEMP "leafarea_summary.py"
 
 @"

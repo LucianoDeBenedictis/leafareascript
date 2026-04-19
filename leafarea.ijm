@@ -31,7 +31,7 @@ dir = getDirectory("current");
 if (!endsWith(dir, "/")) dir = dir + "/";
 
 particlesDir = dir + "results/particles/";
-threshDir    = dir + "results/thresholded/";
+threshDir    = dir + "results/outlines/";
 if (!File.exists(dir + "results/"))  File.makeDirectory(dir + "results/");
 if (!File.exists(particlesDir))      File.makeDirectory(particlesDir);
 if (!File.exists(threshDir))         File.makeDirectory(threshDir);
@@ -79,7 +79,7 @@ for (i = 0; i < list.length; i++) {
     saveAs("Results", particlesDir + baseName + ".csv");
 
     // Save the outline mask image produced by Analyze Particles
-    saveAs("PNG", threshDir + baseName + "_overlay.png");
+    saveAs("PNG", threshDir + baseName + "_outlines.png");
 
     close("*");
 }

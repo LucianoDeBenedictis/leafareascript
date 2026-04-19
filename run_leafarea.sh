@@ -116,18 +116,18 @@ for csvpath in csv_files:
         print(f"{base}: {img.width}x{img.height} px -> 1 px = {px_to_mm2:.8f} mm2")
 
     with open(csvpath, newline="") as f:
-        rows = list(csv.reader(f))
+        reader = csv.DictReader(f)
+        rows = list(reader)
 
     total_area_px = 0.0
-    label = base
-    for row in rows[1:]:
-        if len(row) < 3:
-            continue
+    for row in rows:
         try:
-            total_area_px += float(row[2].strip())
-            label = row[1].strip()
-        except ValueError:
+            total_area_px += float(row["Area"].strip())
+        except (ValueError, KeyError):
             continue
+    if "Label" not in rows[0]:
+        raise KeyError(f"No Label column found in {os.path.basename(csvpath)}")
+    label = rows[0]["Label"].strip()
 
     area_mm2 = total_area_px * px_to_mm2
     summary_rows.append([label, f"{area_mm2:.6f}"])
