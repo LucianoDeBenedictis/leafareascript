@@ -12,7 +12,7 @@ $FijiDir = ""
 
 if (Test-Path $ConfigFile) {
     $FijiDir = (Get-Content $ConfigFile -Raw).Trim()
-    if (-not (Test-Path (Join-Path $FijiDir "fiji"))) {
+    if (-not (Test-Path (Join-Path $FijiDir "fiji-windows-x64.exe"))) {
         Write-Host "Saved Fiji path no longer valid: $FijiDir"
         $FijiDir = ""
     }
@@ -20,11 +20,11 @@ if (Test-Path $ConfigFile) {
 
 if (-not $FijiDir) {
     Write-Host "Fiji not found. Please enter the full path to your Fiji folder."
-    Write-Host "(e.g. C:\Users\me\Fiji.app)"
+    Write-Host "(e.g. C:\Users\me\Fiji)"
     Write-Host ""
     $FijiDir = (Read-Host "Fiji folder path").Trim().TrimEnd('\')
-    if (-not (Test-Path (Join-Path $FijiDir "fiji"))) {
-        Write-Error "fiji executable not found in $FijiDir"
+    if (-not (Test-Path (Join-Path $FijiDir "fiji-windows-x64.exe"))) {
+        Write-Error "fiji-windows-x64.exe not found in $FijiDir"
         exit 1
     }
     $FijiDir | Set-Content $ConfigFile
@@ -32,7 +32,11 @@ if (-not $FijiDir) {
     Write-Host ""
 }
 
-$FijiExe = Join-Path $FijiDir "fiji"
+$FijiExe = Join-Path $FijiDir "fiji-windows-x64.exe"
+if (-not (Test-Path $FijiExe)) {
+    Write-Error "fiji-windows-x64.exe not found in $FijiDir"
+    exit 1
+}
 
 # ── Defaults ─────────────────────────────────────────────────────────────────
 $Defaults = @{
@@ -86,14 +90,14 @@ if (-not $dpi) {
 
 # ── Run Fiji ──────────────────────────────────────────────────────────────────
 # --run with #@String parameters requires each value double-quoted
-$FijiArgs = "threshold=`"$threshold`",trimPx=`"$trimPx`",lowSize=`"$lowSize`",upperSize=`"$upperSize`",lowCirc=`"$lowCirc`",upCirc=`"$upCirc`""
+$FijiArgs = "threshold='$threshold',trimPx='$trimPx',lowSize='$lowSize',upperSize='$upperSize',lowCirc='$lowCirc',upCirc='$upCirc'"
 
 Write-Host ""
 Write-Host "Running Fiji on: $(Get-Location)"
 Write-Host "Arguments: $FijiArgs"
 Write-Host ""
 
-& $FijiExe --headless --run $ScriptPath $FijiArgs
+Start-Process -Wait -NoNewWindow -FilePath $FijiExe -ArgumentList "--headless --run `"$ScriptPath`" `"$FijiArgs`""
 
 # ── Summarize per-particle CSVs and write summary ─────────────────────────────
 Write-Host ""
