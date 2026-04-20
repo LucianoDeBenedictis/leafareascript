@@ -21,7 +21,7 @@ fi
 
 if [[ -z "$IJ_DIR" ]]; then
     echo "ImageJ not found. Please enter the full path to your ImageJ folder."
-    echo "(e.g. /home/user/ImageJ or /Applications/ImageJ)"
+    echo "(e.g. /home/user/ImageJ)"
     echo ""
     read -p "ImageJ folder path: " IJ_DIR
     IJ_DIR="${IJ_DIR%/}"  # strip trailing slash

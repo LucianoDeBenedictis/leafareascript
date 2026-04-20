@@ -21,12 +21,12 @@ fi
 
 if [[ -z "$IJ_DIR" ]]; then
     echo "Fiji not found. Please enter the full path to your Fiji folder."
-    echo "(e.g. /home/user/Fiji.app or /Applications/Fiji.app)"
+    echo "(e.g. /home/user/Fiji)"
     echo ""
-    read -p "ImageJ folder path: " IJ_DIR
+    read -p "Fiji folder path: " IJ_DIR
     IJ_DIR="${IJ_DIR%/}"  # strip trailing slash
     if [[ ! -f "$IJ_DIR/fiji" ]]; then
-        echo "Error: fiji executable not found in $IJ_DIR"
+        echo "Error: Fiji executable not found in $IJ_DIR"
         exit 1
     fi
     echo "$IJ_DIR" > "$CONFIG_FILE"
@@ -44,7 +44,7 @@ DEF_UPPERSIZE="Infinity"
 DEF_LOWCIRC="0"
 DEF_UPCIRC="1"
 
-echo "=== ImageJ Leaf Area Analyzer ==="
+echo "=== Fiji Leaf Area Analyzer ==="
 echo "(Press Enter to accept the default shown in brackets)"
 echo ""
 
